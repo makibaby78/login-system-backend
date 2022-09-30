@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
+const bcrypt = require('bcryptjs')
 
 
 mongoose.connect(process.env.DATABASE_URL , 
