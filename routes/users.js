@@ -20,15 +20,14 @@ router.get('/:id', getUser, (req, res) => {
     // res.send(res.user.name) 
 })
 // Get By Email
-router.get('/email/:email', getUserByEmail, (req, res) => {
+router.get('/email/:email/:password', getUserByEmail, (req, res) => {
     res.send(res.user)
 })
 
 // Creating One
 router.post('/', async (req, res) => {
     const passwordHashed = await bcrypt.hash(req.body.password, 10)
-    // const isMatch = await bcrypt.compare('password1', passwordHashed)
-    // console.log(isMatch)
+
     const user = new User({
         name: req.body.name,
         password: passwordHashed,
@@ -93,10 +92,16 @@ async function getUserByEmail(req, res, next){
         if(user == null || user == []){
             return res.status(404).json({ message: 'Cannot find user with that email' })
         }
+        if(user && (await bcrypt.compare(req.params.password, user.password))){
+            res.user = user
+        }else{
+            res.status(400)
+            throw new Error('Invalid credentials')
+        }
     }catch (err) {
         return res.status(500).json({message: err.message})
     }
-    res.user = user
+
     next()
 }
 
