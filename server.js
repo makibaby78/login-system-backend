@@ -10,6 +10,8 @@ mongoose.connect(process.env.DATABASE_URL ,
     }
 )
 
+app.use(express.json())
+
 const db = mongoose.connection
 db.on('error', (error) => console.log(error))
 db.once('open', () => console.log('Connected to Database'))
@@ -17,5 +19,8 @@ db.once('open', () => console.log('Connected to Database'))
 app.get('/', (req, res) => {
     res.send('Api is running test 3')
 })
+
+const usersRouter = require('./routes/users')
+app.use('/users', usersRouter)
 
 app.listen(process.env.PORT || 8000, () => console.log("Server is running"))
