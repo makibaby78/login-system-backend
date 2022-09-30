@@ -17,7 +17,7 @@ db.on('error', (error) => console.log(error))
 db.once('open', () => console.log('Connected to Database'))
 
 app.get('/', (req, res) => {
-    res.send('Api is running test 3')
+    res.send('Api is running test 4')
 })
 
 const usersRouter = require('./routes/users')
