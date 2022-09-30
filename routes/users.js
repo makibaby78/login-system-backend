@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 
 // Getting all
@@ -20,9 +21,13 @@ router.get('/:id', getUser, (req, res) => {
 })
 // Creating One
 router.post('/', async (req, res) => {
+    const passwordHashed = await bcrypt.hash(req.body.password, 10)
+    // const isMatch = await bcrypt.compare('password1', passwordHashed)
+    // console.log(isMatch)
     const user = new User({
         name: req.body.name,
-        password: req.body.password,
+        password: passwordHashed,
+        email: req.body.email,
         dateCreated: req.body.dateCreated
     })
     try{
@@ -31,6 +36,7 @@ router.post('/', async (req, res) => {
     } catch (err){
         res.status(400).json({ message: err.message })
     }
+
 })
 
 // Updating One
@@ -40,6 +46,9 @@ router.patch('/:id', getUser, async (req, res) => {
         }
         if (req.body.password != null){
             res.user.password = req.body.password
+        }
+        if (req.body.email != null){
+            res.user.email = req.body.password
         }
         try {
             const updatedUser = await res.user.save()
