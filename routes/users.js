@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
+// const bcrypt = require('bcrypt')
 
 
 // Getting all
@@ -21,12 +21,12 @@ router.get('/:id', getUser, (req, res) => {
 })
 // Creating One
 router.post('/', async (req, res) => {
-    const passwordHashed = await bcrypt.hash(req.body.password, 10)
+    // const passwordHashed = await bcrypt.hash(req.body.password, 10)
     // const isMatch = await bcrypt.compare('password1', passwordHashed)
     // console.log(isMatch)
     const user = new User({
         name: req.body.name,
-        password: passwordHashed,
+        password: req.body.password,
         email: req.body.email,
         dateCreated: req.body.dateCreated
     })
