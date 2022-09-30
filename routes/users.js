@@ -19,6 +19,10 @@ router.get('/:id', getUser, (req, res) => {
     // Getting the name only
     // res.send(res.user.name) 
 })
+// Get By Email
+router.get('/email/:email', getUserByEmail, (req, res) => {
+    res.send(res.email)
+})
 // Creating One
 router.post('/', async (req, res) => {
     const passwordHashed = await bcrypt.hash(req.body.password, 10)
@@ -78,6 +82,20 @@ async function getUser(req, res, next){
         return res.status(500).json({message: err.message})
     }
     res.user = user
+    next()
+}
+
+async function getUserByEmail(req, res, next){
+    let email
+    try{
+        email = await User.find({email: req.params.email})
+        if(email == null){
+            return res.status(404).json({ message: 'Cannot find email' })
+        }
+    }catch (err) {
+        return res.status(500).json({message: err.message})
+    }
+    res.email = email
     next()
 }
 
