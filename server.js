@@ -15,7 +15,7 @@ db.on('error', (error) => console.log(error))
 db.once('open', () => console.log('Connected to Database'))
 
 app.get('/', (req, res) => {
-    res.send('Api is running')
+    res.send('Api is running test 3')
 })
 
 app.listen(process.env.PORT || 8000, () => console.log("Server is running"))
