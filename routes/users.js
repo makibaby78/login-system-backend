@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 
 // Getting all
@@ -98,6 +100,7 @@ async function getUserByEmail(req, res, next){
                 name: user.name,
                 email: user.email,
                 matched: true,
+                token: generateToken(user._id)
             })
             console.log("matched")
         }else{
@@ -111,5 +114,10 @@ async function getUserByEmail(req, res, next){
     next()
 }
 
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+    })
+}
 
 module.exports = router
