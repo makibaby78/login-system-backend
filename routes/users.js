@@ -93,7 +93,13 @@ async function getUserByEmail(req, res, next){
             return res.status(404).json({ message: 'Cannot find user with that email' })
         }
         if(user && (await bcrypt.compare(req.params.password, user.password))){
-            res.user = user
+            user = res.json({
+                _id: user.id,
+                name: user.name,
+                email: user.email,
+                matched: true,
+            })
+            console.log("matched")
         }else{
             res.status(400)
             throw new Error('Invalid credentials')
