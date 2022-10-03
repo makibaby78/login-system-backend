@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
@@ -9,8 +8,9 @@ const jwt = require('jsonwebtoken')
 // Getting all
 router.get('/', async (req, res) => {
     try{
-        const users = await User.find()
+        const users = await User.find().select('-password')
         res.json(users)
+
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -20,6 +20,10 @@ router.get('/:id', getUser, (req, res) => {
     res.send(res.user)
     // Getting the name only
     // res.send(res.user.name) 
+})
+
+router.get('/check/:email', checkEmail, (req, res) => {
+    res.send(res.user)
 })
 // Get By Email
 router.get('/email/:email/:password', getUserByEmail, (req, res) => {
@@ -113,7 +117,21 @@ async function getUserByEmail(req, res, next){
 
     next()
 }
+async function checkEmail(req, res, next){
+    let email
+    try{
+        email = await User.findOne({email: req.params.email})
+        if(email == null || email == []){
+            return res.json({ emailAvailable: true })
+        }else{
+            return res.json({ emailAvailable: false })
+        }
+    }catch (err) {
+        return res.status(500).json({message: err.message})
+    }
 
+    next()
+}
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '30d',
