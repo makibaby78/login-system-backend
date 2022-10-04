@@ -96,7 +96,7 @@ async function getUserByEmail(req, res, next){
     try{
         user = await User.findOne({email: req.params.email})
         if(user == null || user == []){
-            return res.status(404).json({ matched: false })
+            return res.json({ matched: false })
         }
         if(user && (await bcrypt.compare(req.params.password, user.password))){
             user = res.json({
@@ -106,9 +106,8 @@ async function getUserByEmail(req, res, next){
                 matched: true,
                 token: generateToken(user._id)
             })
-            console.log("matched")
         }else{
-            res.status(400).json({ matched: false })
+            res.json({ matched: false })
         }
     }catch (err) {
         return res.status(500).json({message: err.message})
