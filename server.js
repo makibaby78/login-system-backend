@@ -24,4 +24,4 @@ app.get('/', (req, res) => {
 const usersRouter = require('./routes/users')
 app.use('/users', usersRouter)
 
-app.listen(process.env.PORT || 8000, () => console.log("Server is running"))
+app.listen(process.env.PORT || 8000, () => console.log("Server is running 8000"))

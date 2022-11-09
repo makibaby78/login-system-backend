@@ -35,8 +35,8 @@ router.post('/', async (req, res) => {
     const passwordHashed = await bcrypt.hash(req.body.password, 10)
 
     const user = new User({
-        firstname: req.body.name,
-        lastname: req.body.name,
+        firstname: req.body.lastname,
+        lastname: req.body.firstname,
         password: passwordHashed,
         email: req.body.email,
         dateCreated: req.body.dateCreated,
@@ -53,8 +53,11 @@ router.post('/', async (req, res) => {
 
 // Updating One
 router.patch('/:id', getUser, async (req, res) => {
-        if(req.body.name != null){
-            res.user.name = req.body.name
+        if(req.body.firstname != null){
+            res.user.firstname = req.body.lastname
+        }
+        if(req.body.lastname != null){
+            res.user.lastname = req.body.lastname
         }
         if (req.body.password != null){
             res.user.password = req.body.password
@@ -106,7 +109,8 @@ async function getUserByEmail(req, res, next){
         if(user && (await bcrypt.compare(req.params.password, user.password))){
             user = res.json({
                 _id: user.id,
-                name: user.name,
+                firstname: user.firstname,
+                lastname: user.name,
                 email: user.email,
                 matched: true,
                 token: generateToken(user._id)
