@@ -35,10 +35,12 @@ router.post('/', async (req, res) => {
     const passwordHashed = await bcrypt.hash(req.body.password, 10)
 
     const user = new User({
-        name: req.body.name,
+        firstname: req.body.name,
+        lastname: req.body.name,
         password: passwordHashed,
         email: req.body.email,
-        dateCreated: req.body.dateCreated
+        dateCreated: req.body.dateCreated,
+        token: generateToken(req.body._id)
     })
     try{
         const newUser = await user.save()
@@ -59,6 +61,9 @@ router.patch('/:id', getUser, async (req, res) => {
         }
         if (req.body.email != null){
             res.user.email = req.body.email
+        }
+        if (req.body.email != null){
+            res.user.token = req.body.token
         }
         try {
             const updatedUser = await res.user.save()
